@@ -1,0 +1,27 @@
+{
+  "name": "HackAtBrownComfortBed",
+  "version": "1.0.0",
+  "description": "Help with hospital comfort and stress level.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hdavidzhu/HackAtBrownComfortBed.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hdavidzhu/HackAtBrownComfortBed/issues"
+  },
+  "homepage": "https://github.com/hdavidzhu/HackAtBrownComfortBed",
+  "dependencies": {
+    "accel-mma84": "^0.2.3",
+    "ambient-attx4": "^0.2.4",
+    "d3": "^3.5.4"
+  },
+  "devDependencies": {
+    "plotly": "^1.0.2"
+  }
+}
