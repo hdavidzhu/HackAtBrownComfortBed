@@ -17,6 +17,8 @@ var opts = {
 };
 
 var args = [];
+
+// Create the buffers for collecting data in chunks.
 var accelerometer_buffer = [];
 var new_acc_buffer = [];
 var light_buffer = [];
@@ -43,15 +45,38 @@ tessel.findTessel(opts, function(err, device) {
     // `device.on('message', function (msg) { ... })` receives an event
     // when an object is received from Tessel.
     device.on('message', function (m) {
-      accelerometer_buffer.push(m);
-      if (accelerometer_buffer.length%50 === 0) {
-        var new_acc_buffer = accelerometer_buffer;
-        accelerometer_buffer = [];
-        fs.appendFile("./test_file.json", JSON.stringify(new_acc_buffer, null, 2).slice(2,-2) + ",\n", function(err){
-          if (err) throw err;
-          console.log("Saved!");
-        });
-      }
+
+      // Determine what to do based on what data is received.
+      if (m.hasOwnProperty('accel')) {
+        accelerometer_buffer.push(m['accel']);
+        if (accelerometer_buffer.length%50 === 0) {
+          new_acc_buffer = accelerometer_buffer;
+          accelerometer_buffer = [];
+          fs.appendFile("./accel_file.json", JSON.stringify(new_acc_buffer, null, 0).slice(1,-1) + ',\n', function(err){
+            if (err) throw err;
+            console.log("Acceleration saved!");
+          });
+        }
+      } else {
+        // Light and sound.
+        light_buffer.push(m['light']);
+        sound_buffer.push(m['sound']);
+        
+        if (light_buffer.length%50 === 0){
+          new_light_buffer = light_buffer;
+          light_buffer = [];
+          new_sound_buffer = sound_buffer;
+          sound_buffer = [];
+          fs.appendFile("./light_file.json", JSON.stringify(new_light_buffer, null, 0).slice(1,-1) + ',\n', function(err){
+            if (err) throw err;
+            console.log("Light saved!");
+          });
+          fs.appendFile("./sound_file.json", JSON.stringify(new_sound_buffer, null, 0).slice(1,-1) + ',\n', function(err){
+            if (err) throw err;
+            console.log("Sound saved!");
+          });
+        }
+      }    
     });
 
     // Exit cleanly on Ctrl+C.

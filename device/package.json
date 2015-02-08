@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "accel-mma84": "^0.2.3"
+    "accel-mma84": "^0.2.3",
+    "ambient-attx4": "^0.2.4"
   }
 }

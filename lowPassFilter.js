@@ -13,14 +13,19 @@ function smoothArray( values, smoothing ){
 var fs = require("fs");
 var plotly = require('plotly')('hdavidzhu','zew17v6s6h');
 
-fs.readFile('./test_file.json', function (err, data){
+// Read a test file and produce a graph of the movement at the end.
+fs.readFile('./accel_file.json', 'utf8', function (err, data){
 	if (err) throw err;
-	var test_data = JSON.parse(data);
-	var chosen_xs = [];
+	var test_data = data.split(',');
+	var chosen_values = [];
+
 	test_data.forEach(function (currentValue, index, array){
-		chosen_xs.push(currentValue.x + currentValue.y + currentValue.z - 1);
+		chosen_values.push(Number(currentValue));
 	});
-	var smoothedPoints = smoothArray(chosen_xs, 10);
+
+	chosen_values.pop();
+
+	var smoothedPoints = smoothArray(chosen_values, 20);
 	var trace1 = {
 	  y: smoothedPoints, 
 	  type: "scatter"
