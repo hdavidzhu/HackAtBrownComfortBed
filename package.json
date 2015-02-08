@@ -18,6 +18,10 @@
   "homepage": "https://github.com/hdavidzhu/HackAtBrownComfortBed",
   "dependencies": {
     "accel-mma84": "^0.2.3",
-    "ambient-attx4": "^0.2.4"
+    "ambient-attx4": "^0.2.4",
+    "d3": "^3.5.4"
+  },
+  "devDependencies": {
+    "plotly": "^1.0.2"
   }
 }

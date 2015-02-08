@@ -6,8 +6,8 @@
 // the Tessel firmware that code on the Tessel uses for hardware access --
 // that's only available to JS that executes on the Tessel itself.
 var tessel = require('tessel');
-
 var script =  require.resolve('./device/index.js');
+var fs = require('fs');
 
 var opts = {
   // Stop existing script, if any
@@ -17,7 +17,13 @@ var opts = {
 };
 
 var args = [];
- 
+var accelerometer_buffer = [];
+var new_acc_buffer = [];
+var light_buffer = [];
+var new_light_buffer = [];
+var sound_buffer = [];
+var new_sound_buffer = [];
+
 // `tessel.findTessel` finds a Tessel attached to this computer and connects.
 tessel.findTessel(opts, function(err, device) {
   if (err) throw err;
@@ -33,6 +39,20 @@ tessel.findTessel(opts, function(err, device) {
     device.stdout.pipe(process.stdout);
     device.stderr.resume();
     device.stderr.pipe(process.stderr);
+
+    // `device.on('message', function (msg) { ... })` receives an event
+    // when an object is received from Tessel.
+    device.on('message', function (m) {
+      accelerometer_buffer.push(m);
+      if (accelerometer_buffer.length%50 === 0) {
+        var new_acc_buffer = accelerometer_buffer;
+        accelerometer_buffer = [];
+        fs.appendFile("./test_file.json", JSON.stringify(new_acc_buffer, null, 2).slice(2,-2) + ",\n", function(err){
+          if (err) throw err;
+          console.log("Saved!");
+        });
+      }
+    });
 
     // Exit cleanly on Ctrl+C.
     process.on('SIGINT', function() {
